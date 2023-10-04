@@ -1,0 +1,80 @@
+name: SwinFIRSSR_SSRx2
+model_type: SwinFIRSSRModel
+scale: 2
+num_gpu: auto
+manual_seed: 0
+
+# dataset and data loader settings
+datasets:
+  test_1:
+    name: KITTI2012
+    type: StereoSRImageDataset
+    dataroot_gt: datasets/StereoSR/test/KITTI2012/hr
+    dataroot_lq: datasets/StereoSR/test/KITTI2012/lr_x2
+    meta_info_file: swinfir/data/meta_info/meta_info_KITTI2012_Test_GT.txt
+    io_backend:
+      type: disk
+
+  test_2:
+    name: KITTI2015
+    type: StereoSRImageDataset
+    dataroot_gt: datasets/StereoSR/test/KITTI2015/hr
+    dataroot_lq: datasets/StereoSR/test/KITTI2015/lr_x2
+    meta_info_file: swinfir/data/meta_info/meta_info_KITTI2015_Test_GT.txt
+    io_backend:
+      type: disk
+
+  test_3:
+    name: Middlebury
+    type: StereoSRImageDataset
+    dataroot_gt: datasets/StereoSR/test/Middlebury/hr
+    dataroot_lq: datasets/StereoSR/test/Middlebury/lr_x2
+    meta_info_file: swinfir/data/meta_info/meta_info_Middlebury_Test_GT.txt
+    io_backend:
+      type: disk
+
+  test_4:
+    name: Flickr1024
+    type: StereoSRImageDataset
+    dataroot_gt: datasets/StereoSR/test/Flickr1024/hr
+    dataroot_lq: datasets/StereoSR/test/Flickr1024/lr_x2
+    meta_info_file: swinfir/data/meta_info/meta_info_Flickr1024_Test_GT.txt
+    io_backend:
+      type: disk
+
+
+# network structures
+network_g:
+  type: SwinFIRSSR
+  upscale: 2
+  in_chans: 3
+  img_size: 64
+  window_size: 16
+  compress_ratio: 3
+  squeeze_factor: 30
+  conv_scale: 0.01
+  overlap_ratio: 0.5
+  img_range: 1.
+  depths: [6, 6, 6, 6, 6, 6]
+  embed_dim: 180
+  num_heads: [6, 6, 6, 6, 6, 6]
+  mlp_ratio: 2
+  upsampler: 'pixelshuffle'
+  resi_connection: 'SFB'
+
+# path
+path:
+  pretrain_network_g: ./experiments/pretrained_models/SwinFIRSSR_SSRx2.pth
+  strict_load_g: true
+  param_key_g: 'params_ema'
+
+# validation settings
+val:
+  save_img: true
+  suffix: ~  # add suffix to saved images, if None, use exp name
+
+  metrics:
+    psnr:
+      type: calculate_psnr
+      crop_border: 2
+      test_y_channel: false
