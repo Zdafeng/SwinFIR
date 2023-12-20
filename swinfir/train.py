@@ -3,7 +3,6 @@ import swinfir.archs
 import swinfir.data
 import swinfir.models
 import swinfir.losses
-import swinfir.metrics
 from basicsr.train import train_pipeline
 
 if __name__ == '__main__':
