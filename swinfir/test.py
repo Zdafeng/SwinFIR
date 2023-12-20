@@ -2,7 +2,6 @@ import os.path as osp
 import swinfir.archs
 import swinfir.data
 import swinfir.models
-import swinfir.metrics
 from basicsr.test import test_pipeline
 
 if __name__ == '__main__':
